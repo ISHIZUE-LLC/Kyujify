@@ -1,0 +1,106 @@
+{
+  "name": "kyujify",
+  "displayName": "Kyujify: Shinjitai ↔ Kyujitai Converter",
+  "description": "Convert between modern and traditional Japanese characters, Kyujitai and Shinjitai",
+  "version": "1.0.0",
+  "publisher": "Ishizue",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": ["Formatters"],
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ISHIZUE-LLC/Kyujify"
+  },
+  "activationEvents": [
+    "onCommand:kyujify.toKyujitai",
+    "onCommand:kyujify.toShinjitai",
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "kyujify.toKyujitai",
+        "title": "Convert to Kyujitai"
+      },
+      {
+        "command": "kyujify.toShinjitai",
+        "title": "Convert to Shinjitai"
+      }
+    ],
+    "configuration": {
+      "title": "Kyujify",
+      "properties": {
+        "kyujify.conversionPairsFile": {
+          "type": "string",
+          "default": "./data/default_pairs.json",
+          "description": "Path to the JSON file containing conversion pairs."
+        },
+        "kyujify.lineStartSymbol": {
+          "type": "string",
+          "default": "",
+          "description": "Symbol that indicates a line should be converted. Leave blank to convert all text. Can be a string."
+        },
+        "kyujify.exclusions": {
+          "type": "array",
+          "default": ["欠缺"],
+          "description": "List of words to exclude from conversion.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "kyujify.toKyujitai",
+          "group": "1_modification",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "kyujify.toShinjitai",
+          "group": "1_modification",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "kyujify.toKyujitai",
+          "group": "1_modification"
+        },
+        {
+          "command": "kyujify.toShinjitai",
+          "group": "1_modification"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.98.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "eslint": "^9.21.0",
+    "esbuild": "^0.25.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.7.3",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
